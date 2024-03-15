@@ -4,12 +4,12 @@ import cors from "cors";
 require('dotenv').config();
 
 import userRoutes from "./routes/user";
-// import createPost from "./routes/createPost";
+import createTodo from "./routes/todo";
 const app: Application = express();
 app.use(cors());
 app.use(express.json());
 app.use(userRoutes);
-// app.use(createPost); 
+app.use(createTodo); 
 mongoose.connect(process.env.Mongo_url as string, {
   dbName: "TODO_app",
 });

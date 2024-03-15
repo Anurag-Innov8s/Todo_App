@@ -4,6 +4,7 @@ interface IUser {
   name: string;
   email: string;
   password: string;
+  todos: mongoose.Types.ObjectId[];
 }
 const userSchema = new mongoose.Schema({
   profilePic:{
@@ -22,6 +23,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  todos: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "posts", 
+    },
+  ],
 });
 const User = mongoose.model<IUser>("User", userSchema);
 export default User;

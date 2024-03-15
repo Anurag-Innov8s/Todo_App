@@ -3,18 +3,23 @@ interface IUser {
   posts: IPost[] | Types.ObjectId[];
 }
 interface IPost {
-  body: string;
+  todoBody: string;
   description: string;
+  user: Types.ObjectId | IUser;
 }
 const postSchema: Schema<IPost> = new mongoose.Schema({
-  body: {
+  todoBody: {
     type: String,
-    required: true,
+    required:true,
   },
   description:{
     type: String,
     required:true,
-  }
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User", 
+  },
 },
 {
     timestamps:true
