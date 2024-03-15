@@ -8,7 +8,7 @@ declare global {
     }
   }
 }
-const jwt_secret: string = process.env.jwt_secret as string;
+const JWT_SECRET: string = process.env.JWT_SECRET as string;
 const authentication = (
   req: Request,
   res: Response,
@@ -20,7 +20,7 @@ const authentication = (
       throw new Error("You must Login first.");
     }
     const token: string = (authorization as string).replace("Bearer ", "");
-    jwt.verify(token, jwt_secret, async (err: any, payload: any) => {
+    jwt.verify(token, JWT_SECRET, async (err: any, payload: any) => {
       if (err) {
         throw new Error("You must Login first.");
       }

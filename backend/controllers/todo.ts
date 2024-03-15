@@ -3,7 +3,6 @@ import User from "../models/user";
 import { Post } from "../models/todo";
 import * as dotenv from "dotenv";
 dotenv.config();
-const jwt_secret: string = process.env.JWT_secret as string;
 
 export const createTodo = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -11,20 +10,19 @@ export const createTodo = async (req: Request, res: Response): Promise<any> => {
       todoBody: req.body.todoBody,
       description: req.body.description,
     };
-    const todo = await Post.create(newTodoData);
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { $push: { todos: todo._id } },
-      { new: true }
-    );
-
+    const user = await User.findById(req.user._id);
     if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
-
+    const todo = await Post.create(newTodoData);
+    await User.findByIdAndUpdate(
+      req.user._id,
+      { $push: { todos: todo._id } },
+      { new: true }
+    );
     return res.status(201).json({
       success: true,
       message: "Todo created",
@@ -59,7 +57,7 @@ export const deleteTodo = async (req: Request, res: Response): Promise<any> => {
     }
 
     user.todos = user.todos.filter(
-      (todoId) => todoId.toString() !== req.params._id
+      (todoId) => todoId.toString() !== req.params.id
     );
 
     await user.save();

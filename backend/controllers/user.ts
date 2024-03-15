@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import User from "../models/user";
+import {Post} from "../models/todo";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 dotenv.config();
-const jwt_secret: string = process.env.JWT_secret as string;
+const JWT_SECRET: string = process.env.JWT_SECRET as string;
 export const signup = async (req: Request, res: Response): Promise<any> => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
@@ -54,7 +55,7 @@ export const signin = async (req: Request, res: Response): Promise<any> => {
     }
     const match = await bcrypt.compare(password, user.password);
     if (match) {
-      const token = jwt.sign({ _id: user.id }, jwt_secret);
+      const token = jwt.sign({ _id: user.id }, JWT_SECRET);
       return res.status(200).json({
         success:true,
         message:"Logged In successfully",
@@ -72,3 +73,44 @@ export const signin = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
+
+
+export const deleteMe = async (req: Request, res: Response): Promise<any> => {
+
+  try {
+    const user = await User.findById(req.user.id);
+    if(!user){
+      return res.status(404).json({
+        success:false,
+        message:"User not found"
+      })
+    }
+    const todo = user.todos;
+
+    await user.deleteOne();
+
+    res.cookie("token",null,{
+      expires:new Date(Date.now()),
+      httpOnly:true,
+    })
+
+    if(todo && todo.length>0){
+      for(let i=0;i<todo.length;i++){
+        const td = await Post.findById(todo[i]);
+        if(td){
+          await td.deleteOne();
+        }
+      }
+    }
+    return res.status(200).json({
+      success:false,
+      message:"User and their associated Todo's are deleted successfully"
+    })
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+
