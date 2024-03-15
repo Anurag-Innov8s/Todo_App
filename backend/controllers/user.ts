@@ -74,7 +74,20 @@ export const signin = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-
+export const logout = async (req: Request, res: Response): Promise<any> => {
+  try {
+    res.status(200).cookie("token",null,{expires:new Date(Date.now()),httpOnly:true})
+      .json({
+        success:true,
+        message:"Logged Out successfully"
+      })
+  } catch (error:any) {
+    return res.status(500).json({
+      success:true,
+      message:error.message
+    })
+  }
+};
 export const deleteMe = async (req: Request, res: Response): Promise<any> => {
 
   try {

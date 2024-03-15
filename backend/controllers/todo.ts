@@ -123,4 +123,19 @@ export const getTodo = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+export const getAllTodo = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const todo = await Post.find();
+    return res.status(200).json({
+      success:true,
+      todo
+    })
+  } catch (error:any) {
+    return res.status(500).json({
+      success:false,
+      message:error.message
+    })
+  }
+};
+
 
