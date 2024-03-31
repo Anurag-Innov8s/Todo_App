@@ -3,12 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Signin.css';
 import { EmailRounded, LockRounded } from '@mui/icons-material';
 import axios from 'axios';
-const Signin: React.FC = () => {
+const Signin = () => {
   const navigate = useNavigate();
   const [email,setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const submitHandler = async (e:any)=>{
+  const submitHandler = async (e)=>{
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/signin',{
@@ -19,8 +19,11 @@ const Signin: React.FC = () => {
       console.log(response.data);
       setEmail("");
       setPassword("");
-      navigate("/signup");
-    } catch (error:any) {
+      console.log(response.data.token);
+      
+      document.cookie = `authToken=${response.data.token}; path=/`;
+      navigate("/home");
+    } catch (error) {
       alert("Error while login")
     }
   }

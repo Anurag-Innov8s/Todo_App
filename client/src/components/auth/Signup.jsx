@@ -3,30 +3,33 @@ import { Link } from 'react-router-dom';
 import './Signup.css'; 
 import { Person2Rounded, EmailRounded, LockRounded } from '@mui/icons-material';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';const Signup: React.FC = () => {
+import { useNavigate } from 'react-router-dom';
 
+const Signup = () => {
   const navigate = useNavigate();
-  const [name,setName] = useState("");
-  const [email,setEmail] = useState("");
-  const [password,setPassword] = useState("");
-  const submitHandler = async (e:any)=>{
-  e.preventDefault();
-  try {
-    const response = await axios.post('http://localhost:5000/signup',{
-      name,
-      email,
-      password
-    });
-    
-    console.log(response.data);
-    setName("");
-    setEmail("");
-    setPassword("");
-    navigate("/");
-  } catch (error:any) {
-    alert("Error while signup")
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:5000/signup', {
+        name,
+        email,
+        password
+      });
+      
+      console.log(response.data);
+      setName("");
+      setEmail("");
+      setPassword("");
+      navigate("/");
+    } catch (error) {
+      alert("Error while signup");
+    }
   }
-}
+
   return (
     <>
       <div className="wrapper">

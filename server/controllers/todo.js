@@ -1,10 +1,9 @@
-import { Request, Response } from "express";
-import User from "../models/user";
-import { Post } from "../models/todo";
-import * as dotenv from "dotenv";
+import {User} from "../models/user.js";
+import { Post } from "../models/todo.js";
+import dotenv from "dotenv";
 dotenv.config();
 
-export const createTodo = async (req: Request, res: Response): Promise<any> => {
+export const createTodo = async (req, res) => {
   try {
     const newTodoData = {
       todoBody: req.body.todoBody,
@@ -28,7 +27,7 @@ export const createTodo = async (req: Request, res: Response): Promise<any> => {
       message: "Todo created",
       todo,
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({
       success: false,
       message: error.message,
@@ -36,7 +35,7 @@ export const createTodo = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-export const deleteTodo = async (req: Request, res: Response): Promise<any> => {
+export const deleteTodo = async (req, res) => {
   try {
     const todo = await Post.findById(req.params.id);
     if (!todo) {
@@ -66,7 +65,7 @@ export const deleteTodo = async (req: Request, res: Response): Promise<any> => {
       success: true,
       message: "Todo deleted successfully",
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({
       success: false,
       message: error.message,
@@ -74,7 +73,7 @@ export const deleteTodo = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-export const updateTodo = async (req: Request, res: Response): Promise<any> => {
+export const updateTodo = async (req, res) => {
   try {
     const todo = await Post.findById(req.params.id);
     if (!todo) {
@@ -84,15 +83,15 @@ export const updateTodo = async (req: Request, res: Response): Promise<any> => {
       });
     }
 
-    todo.todoBody=req.body.todoBody;
-    todo.description=req.body.description;
+    todo.todoBody = req.body.todoBody;
+    todo.description = req.body.description;
     await todo.save();
     return res.status(200).json({
-      success:true,
-      message:"Todo Updated successfully",
-      todo
-    })
-  } catch (error: any) {
+      success: true,
+      message: "Todo Updated successfully",
+      todo,
+    });
+  } catch (error) {
     res.status(500).json({
       success: false,
       message: error.message,
@@ -100,8 +99,7 @@ export const updateTodo = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-
-export const getTodo = async (req: Request, res: Response): Promise<any> => {
+export const getTodo = async (req, res) => {
   try {
     const todo = await Post.findById(req.params.id);
     if (!todo) {
@@ -111,11 +109,11 @@ export const getTodo = async (req: Request, res: Response): Promise<any> => {
       });
     }
     return res.status(200).json({
-      success:true,
-      message:"Todo found successfully",
-      todo
-    })
-  } catch (error: any) {
+      success: true,
+      message: "Todo found successfully",
+      todo,
+    });
+  } catch (error) {
     res.status(500).json({
       success: false,
       message: error.message,
@@ -123,19 +121,18 @@ export const getTodo = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-export const getAllTodo = async (req: Request, res: Response): Promise<any> => {
+export const getAllTodo = async (req, res) => {
   try {
     const todo = await Post.find();
     return res.status(200).json({
-      success:true,
-      todo
-    })
-  } catch (error:any) {
+      success: true,
+      todo,
+    });
+  } catch (error) {
     return res.status(500).json({
-      success:false,
-      message:error.message
-    })
+      success: false,
+      message: error.message,
+    });
   }
 };
-
 
