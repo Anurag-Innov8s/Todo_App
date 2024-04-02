@@ -1,20 +1,29 @@
+import { useEffect, useState } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Signin from './components/auth/Signin';
-import Signup from './components/auth/Signup';
-// import { TodoWrapper } from './components/TodoWrapper';
-import { TodoWrapper } from './components/TodoWrapper';
+import ListHeader from './components/ListHeader';
+import ListItem from './components/ListItem';
 function App() {
+  const [tasks, setTasks] = useState(null);
+  const userMail = 'anurag@gmail.com'
+  const getData = async () =>{
+    
+    try {
+      const response = await fetch(`http://localhost:5000/todos/${userMail}`)
+      const json = await response.json()
+      setTasks(json);
+    } catch (error) {
+      console.log(error)
+    }
+  } 
+  useEffect(()=>getData,[])
+  const sortedTasks = tasks?.sort((a,b)=>new Date(a.date)-new Date(b.date))
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Signin />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="home" element={<TodoWrapper/>}></Route>
-      </Routes>
+    <div className="app">
+      <ListHeader listName={'🔖Todo APP'}/>
+      {sortedTasks?.map((task)=><ListItem key={task.id} task={task}/>)}
       
-    </Router> 
+    </div>
   );
-}
+} 
 
 export default App;
